@@ -3,11 +3,11 @@ package main.java.com.example.jdbcwebsites.domain;
 public class Website {
 	private long id;
 	
-	private String domain;
-	private String description;
-	private int page_rank;
-	private int page_authority;
-	private int domain_authority;
+	private static String domain;
+	private static String description;
+	private static int page_rank;
+	private static int page_authority;
+	private static int domain_authority;
 	
 	public Website() {
 	}
