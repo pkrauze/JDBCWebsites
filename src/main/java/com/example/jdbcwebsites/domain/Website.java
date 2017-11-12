@@ -57,7 +57,4 @@ public class Website {
 	public void setDomain_authority(int domain_authority) {
 		this.domain_authority = domain_authority;
 	}
-	
-	
-
 }
