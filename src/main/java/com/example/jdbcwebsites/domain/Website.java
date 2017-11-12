@@ -27,31 +27,31 @@ public class Website {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getDomain() {
+	public static String getDomain() {
 		return domain;
 	}
 	public void setDomain(String domain) {
 		this.domain = domain;
 	}
-	public String getDescription() {
+	public static String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public int getPage_rank() {
+	public static int getPage_rank() {
 		return page_rank;
 	}
 	public void setPage_rank(int page_rank) {
 		this.page_rank = page_rank;
 	}
-	public int getPage_authority() {
+	public static int getPage_authority() {
 		return page_authority;
 	}
 	public void setPage_authority(int page_authority) {
 		this.page_authority = page_authority;
 	}
-	public int getDomain_authority() {
+	public static int getDomain_authority() {
 		return domain_authority;
 	}
 	public void setDomain_authority(int domain_authority) {

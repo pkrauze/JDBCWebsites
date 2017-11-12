@@ -32,11 +32,11 @@ public interface WebsiteService {
 	
 	public Website findByDomain(String domain);
 	
-	public Website findbyDescription(String description);
+	public Website findByDescription(String description);
 	
-	public Website findbyPageRank(int page_rank);
+	public Website findByPageRank(int page_rank);
 	
-	public Website findbyPageAuthority(int page_authority);
+	public Website findByPageAuthority(int page_authority);
 	
-	public Website findbyDomainAuthority(int domain_authority);
+	public Website findByDomainAuthority(int domain_authority);
 }
