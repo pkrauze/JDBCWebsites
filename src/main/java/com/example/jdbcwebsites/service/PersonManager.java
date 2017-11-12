@@ -1,4 +1,4 @@
-package com.example.jdbcdemo.service;
+package main.java.com.example.jdbcwebsites.service;
 
 import java.util.List;
 

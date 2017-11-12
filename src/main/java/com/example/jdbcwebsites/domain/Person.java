@@ -1,4 +1,4 @@
-package com.example.jdbcdemo.domain;
+package main.java.com.example.jdbcwebsites.domain;
 
 public class Person {
 	
