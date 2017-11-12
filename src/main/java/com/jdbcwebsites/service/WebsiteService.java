@@ -1,7 +1,8 @@
-package main.java.com.example.jdbcwebsites.service;
+package com.website.service;
 
 import java.util.List;
-import main.java.com.example.jdbcwebsites.domain.Website;
+
+import com.website.domain.Website;
 
 public interface WebsiteService {
 	public int addWebsite(Website website);

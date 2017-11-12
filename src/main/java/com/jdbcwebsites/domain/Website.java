@@ -1,4 +1,4 @@
-package main.java.com.example.jdbcwebsites.domain;
+package com.website.domain;
 
 public class Website {
 	private long id;

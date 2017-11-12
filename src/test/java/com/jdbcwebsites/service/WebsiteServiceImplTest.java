@@ -1,4 +1,4 @@
-package test.java.com.example.jdbcwebsites.service;
+package com.website.service;
 
 import static org.hamcrest.CoreMatchers.either;
 import static org.hamcrest.CoreMatchers.is;
@@ -10,8 +10,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import main.java.com.example.jdbcwebsites.domain.Website;
-import main.java.com.example.jdbcwebsites.service.WebsiteServiceImpl;
+
+import com.website.domain.Website;
+import com.website.service.WebsiteServiceImpl;
 
 public class WebsiteServiceImplTest {
   private static WebsiteServiceImpl WebsiteService = new WebsiteServiceImpl();

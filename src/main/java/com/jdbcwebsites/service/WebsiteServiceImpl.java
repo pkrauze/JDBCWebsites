@@ -1,4 +1,4 @@
-package main.java.com.example.jdbcwebsites.service;
+package com.website.service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import main.java.com.example.jdbcwebsites.domain.Website;
+
+import com.website.domain.Website;
 
 public class WebsiteServiceImpl implements WebsiteService {
   private Connection connection;
