@@ -1,6 +1,0 @@
-# whitelist
-branches:
-  only:
-    - JDBC
-    - Spring
-    - master
