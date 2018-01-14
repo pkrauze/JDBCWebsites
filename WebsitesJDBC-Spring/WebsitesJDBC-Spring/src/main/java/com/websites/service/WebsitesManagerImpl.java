@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.websites.domain.Website;
 import com.websites.domain.Client;
-import com.websites.domain.Order;
+import com.websites.domain.Category;
 
 @Component
 @Transactional
@@ -36,6 +36,11 @@ public class WebsitesManagerImpl implements WebsitesManager {
   public List<Website> getAllWebsites() {
     return sessionFactory.getCurrentSession().getNamedQuery("website.all").list();
   }
+  
+  @Override
+  public void removeAllWebsites() {
+	sessionFactory.getCurrentSession().getNamedQuery("website.destroyAll").executeUpdate();
+  }
 
   @Override
   public void updateWebsite(Website website) {
@@ -59,29 +64,40 @@ public class WebsitesManagerImpl implements WebsitesManager {
   }
 
   @Override
-  public void addOrder(Order order) {
-    sessionFactory.getCurrentSession().persist(order);
+  public void addCategory(Category category) {
+    sessionFactory.getCurrentSession().persist(category);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<Order> getAllOrders() {
-    return sessionFactory.getCurrentSession().getNamedQuery("order.all").list();
+  public List<Category> getAllCategories() {
+    return sessionFactory.getCurrentSession().getNamedQuery("category.all").list();
+  }
+  
+  @Override
+  public void removeAllCategories() {
+	sessionFactory.getCurrentSession().getNamedQuery("category.destroyAll").executeUpdate();
   }
 
   @Override
-  public void updateOrder(Order order) {
-    sessionFactory.getCurrentSession().saveOrUpdate(order);
+  public void updateCategory(Category category) {
+    sessionFactory.getCurrentSession().saveOrUpdate(category);
   }
 
   @Override
-  public void removeOrder(Order order) {
-    sessionFactory.getCurrentSession().delete(order);
+  public void removeCategory(Category category) {
+    sessionFactory.getCurrentSession().delete(category);
   }
 
   @Override
-  public Order findOrderById(Long id) {
-    return (Order) sessionFactory.getCurrentSession().get(Order.class, id);
+  public Category findCategoryById(Long id) {
+    return (Category) sessionFactory.getCurrentSession().get(Category.class, id);
+  }
+
+  @Override
+  public Category findCategoryByName(String name) {
+    return (Category) sessionFactory.getCurrentSession().getNamedQuery("category.byName")
+      .setString("name", name).uniqueResult();
   }
 
   @Override
@@ -95,6 +111,11 @@ public class WebsitesManagerImpl implements WebsitesManager {
     return sessionFactory.getCurrentSession().getNamedQuery("client.all").list();
   }
 
+  @Override
+  public void removeAllClients() {
+	sessionFactory.getCurrentSession().getNamedQuery("client.destroyAll").executeUpdate();
+  }
+  
   @Override
   public void updateClient(Client client) {
     sessionFactory.getCurrentSession().saveOrUpdate(client);

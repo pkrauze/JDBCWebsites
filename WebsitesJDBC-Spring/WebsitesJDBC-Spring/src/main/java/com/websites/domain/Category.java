@@ -15,22 +15,22 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "client.all", query = "SELECT c FROM Client c"),
-	@NamedQuery(name = "client.destroyAll", query = "DELETE FROM Client") })
-public class Client {
+@NamedQueries({ @NamedQuery(name = "category.all", query = "SELECT c FROM Category c"),
+    @NamedQuery(name = "category.byName", query = "SELECT c FROM Category c WHERE c.name = :name"),
+    @NamedQuery(name = "category.destroyAll", query = "DELETE FROM Category") })
+public class Category {
   private Long id;
-  private String firstName, lastName, email;
+  private String name;
   private List<Website> websites = new ArrayList<Website>();
+  
 
-  public Client() {
+  public Category() {
     super();
   }
 
-  public Client(String firstName, String lastName, String email) {
+  public Category(String name) {
     super();
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
+    this.name = name;
   }
 
   @Id
@@ -44,28 +44,12 @@ public class Client {
   }
 
   @Column(unique = true)
-  public String getEmail() {
-    return email;
+  public String getName() {
+    return name;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
+  public void setName(String name) {
+    this.name = name;
   }
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

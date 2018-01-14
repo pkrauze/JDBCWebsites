@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.websites.domain.Website;
 import com.websites.domain.Client;
-import com.websites.domain.Order;
+import com.websites.domain.Category;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/beans.xml" })
@@ -34,29 +34,24 @@ public class WebsitesManagerTest {
   private static final int PR_1 = 50;
   private static final int DOMAIN_AUTHORITY_1 = 55;
   private static final Date CREATED_AT_1 = new Date(2017,1,1);
+  private static final double PRICE_1 = 120.99;
 
   private static final String DOMAIN_2 = "test2.com";
   private static final int PR_2 = 60;
   private static final int DOMAIN_AUTHORITY_2 = 65;
   private static final Date CREATED_AT_2 = new Date(2017,2,2);
+  private static final double PRICE_2 = 220.99;
 
   private static final String DOMAIN_3 = "test3.com";
   private static final int PR_3 = 70;
   private static final int DOMAIN_AUTHORITY_3 = 75;
   private static final Date CREATED_AT_3 = new Date(2017,3,3);
+  private static final double PRICE_3 = 320.99;
 
-  //Order examples
-  private static final double PRICE_1 = 110.10;
-  private static final String DESCRIPTION_1 = "The sample description for order #1";
-  private static final String STATUS_1 = "The status for order #1";
-
-  private static final double PRICE_2 = 220.20;
-  private static final String DESCRIPTION_2 = "The sample description for order #2";
-  private static final String STATUS_2 = "The status for order #2";
-
-  private static final double PRICE_3 = 330.30;
-  private static final String DESCRIPTION_3 = "The sample description for order #3";
-  private static final String STATUS_3 = "The status for order #3";
+  //Category examples
+  private static final String NAME_1 = "IT";
+  private static final String NAME_2 = "Cooking";
+  private static final String NAME_3 = "News";
 
   //Client examples
   private static final String FIRSTNAME_1 = "John";
@@ -79,7 +74,7 @@ public class WebsitesManagerTest {
   @Test
   public void shouldAddOneWebsite() {
     int counterBeforeAddOneWebsite = manager.getAllWebsites().size();
-    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, CREATED_AT_1, new Client());
+    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, PRICE_1, CREATED_AT_1, new Client(), new Category());
     manager.addWebsite(website);
     int websitesCounter = manager.getAllWebsites().size();
     assertEquals(counterBeforeAddOneWebsite + 1, websitesCounter);
@@ -93,10 +88,19 @@ public class WebsitesManagerTest {
     int websitesCounter = manager.getAllWebsites().size();
     assertThat(websitesCounter, either(is(0)).or(is(1)));
   }
+  
+  @Test
+  public void shouldRemoveAllWebsites() {
+    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, PRICE_1, CREATED_AT_1, new Client(), new Category());
+    manager.addWebsite(website);
+    manager.removeAllWebsites();
+    int websitesCounter = manager.getAllWebsites().size();
+    assertThat(websitesCounter, is(0));
+  }
 
   @Test
   public void shouldUpdateAllFieldsWebsite() {
-    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, CREATED_AT_1, new Client());
+    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, PRICE_1, CREATED_AT_1, new Client(), new Category());
     manager.addWebsite(website);
 
     int websitesCounter = manager.getAllWebsites().size();
@@ -104,16 +108,20 @@ public class WebsitesManagerTest {
     retrievedWebsite.setDomain(DOMAIN_2);
     retrievedWebsite.setPageRank(PR_2);
     retrievedWebsite.setDomainAuthority(DOMAIN_AUTHORITY_2);
+    retrievedWebsite.setPrice(PRICE_2);
     retrievedWebsite.setCreatedAt(CREATED_AT_2);
     retrievedWebsite.setClient(new Client(FIRSTNAME_1, LASTNAME_1, EMAIL_1));
+    retrievedWebsite.setCategory(new Category(NAME_1));
     manager.updateWebsite(retrievedWebsite);
 
     retrievedWebsite = manager.getAllWebsites().get(websitesCounter - 1);
     assertEquals(retrievedWebsite.getDomain(), DOMAIN_2);
     assertEquals(retrievedWebsite.getPageRank(), PR_2);
     assertEquals(retrievedWebsite.getDomainAuthority(), DOMAIN_AUTHORITY_2);
+    assertEquals(retrievedWebsite.getPrice(), PRICE_2, _PRECISION);
     assertEquals(retrievedWebsite.getCreatedAt(), CREATED_AT_2);
     assertEquals(retrievedWebsite.getClient().getFirstName(), FIRSTNAME_1);
+    assertEquals(retrievedWebsite.getCategory().getName(), NAME_1);
 
     Website temporaryWebsite = manager.getAllWebsites().get(websitesCounter - 1);
     manager.removeWebsite(temporaryWebsite);
@@ -121,7 +129,7 @@ public class WebsitesManagerTest {
 
   @Test
   public void shouldRemoveOneAddedWebsite() {
-    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, CREATED_AT_1, new Client());
+    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, PRICE_1, CREATED_AT_1, new Client(), new Category());
     manager.addWebsite(website);
 
     int counterBeforeRemoveOneWebsite = manager.getAllWebsites().size();
@@ -134,7 +142,7 @@ public class WebsitesManagerTest {
 
   @Test
   public void shouldFindCorrectlyWebsiteById() {
-    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, CREATED_AT_1, new Client());
+    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, PRICE_1, CREATED_AT_1, new Client(), new Category());
     manager.addWebsite(website);
 
     long id = website.getId();
@@ -146,7 +154,7 @@ public class WebsitesManagerTest {
 
   @Test
   public void shouldFindCorrectlyWebsiteByDomain() {
-    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, CREATED_AT_1, new Client());
+    Website website = new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, PRICE_1, CREATED_AT_1, new Client(), new Category());
     manager.addWebsite(website);
 
     String domain = website.getDomain();
@@ -156,74 +164,87 @@ public class WebsitesManagerTest {
     manager.removeWebsite(retrievedWebsite);
   }
 
-  //Orders
+  //Categories
   @Test
-  public void shouldAddOneOrder() {
-    int counterBeforeAddOneOrder = manager.getAllOrders().size();
-    Order order = new Order(PRICE_1, DESCRIPTION_1, STATUS_1, new Website(), new Client());
-    manager.addOrder(order);
+  public void shouldAddOneCategory() {
+    int counterBeforeAddOneCategory = manager.getAllCategories().size();
+    Category category = new Category(NAME_1);
+    manager.addCategory(category);
 
-    int ordersCounter = manager.getAllOrders().size();
-    assertEquals(counterBeforeAddOneOrder + 1, ordersCounter);
-    Order temporaryOrder = manager.getAllOrders().get(ordersCounter - 1);
+    int categoriesCounter = manager.getAllCategories().size();
+    assertEquals(counterBeforeAddOneCategory + 1, categoriesCounter);
+    Category temporaryCategory = manager.getAllCategories().get(categoriesCounter - 1);
 
-    manager.removeOrder(temporaryOrder);
+    manager.removeCategory(temporaryCategory);
   }
 
   @Test
-  public void shouldGetAllOrders() {
-    int ordersCounter = manager.getAllOrders().size();
-    assertThat(ordersCounter, either(is(0)).or(is(1)));
+  public void shouldGetAllCategories() {
+    int categoriesCounter = manager.getAllCategories().size();
+    assertThat(categoriesCounter, either(is(0)).or(is(1)));
+  }
+  
+  @Test
+  public void shouldRemoveAllCategories() {
+	Category category = new Category(NAME_1);
+	manager.addCategory(category);
+    manager.removeAllCategories();
+    int categoriesCounter = manager.getAllCategories().size();
+    assertThat(categoriesCounter, is(0));
   }
 
   @Test
-  public void shouldUpdateAllFieldsOrder() {
-    Order order = new Order(PRICE_2, DESCRIPTION_2, STATUS_2, new Website(), new Client());
-    manager.addOrder(order);
+  public void shouldUpdateAllFieldsCategory() {
+    Category category = new Category(NAME_1);
+    manager.addCategory(category);
 
-    int ordersCounter = manager.getAllOrders().size();
-    Order retrievedOrder = manager.getAllOrders().get(ordersCounter - 1);
-    retrievedOrder.setPrice(PRICE_3);
-    retrievedOrder.setDescription(DESCRIPTION_3);
-    retrievedOrder.setStatus(STATUS_3);
-    retrievedOrder.setWebsite(new Website(DOMAIN_1, PR_1, DOMAIN_AUTHORITY_1, CREATED_AT_1, new Client()));
-    retrievedOrder.setClient(new Client(FIRSTNAME_1, LASTNAME_1, EMAIL_1));
-    manager.updateOrder(retrievedOrder);
+    int categoriesCounter = manager.getAllCategories().size();
+    Category retrievedCategory = manager.getAllCategories().get(categoriesCounter - 1);
+    retrievedCategory.setName(NAME_2);
+    manager.updateCategory(retrievedCategory);
 
-    retrievedOrder = manager.getAllOrders().get(ordersCounter - 1);
-    assertEquals(retrievedOrder.getPrice(), PRICE_3, _PRECISION);
-    assertEquals(retrievedOrder.getDescription(), DESCRIPTION_3);
-    assertEquals(retrievedOrder.getStatus(), STATUS_3);
-    assertEquals(retrievedOrder.getWebsite().getDomain(), DOMAIN_1);
-    assertEquals(retrievedOrder.getClient().getEmail(), EMAIL_1);
+    retrievedCategory = manager.getAllCategories().get(categoriesCounter - 1);
+    assertEquals(retrievedCategory.getName(), NAME_2);
 
-    Order temporaryOrder = manager.getAllOrders().get(ordersCounter - 1);
-    manager.removeOrder(temporaryOrder);
+    Category temporaryCategory = manager.getAllCategories().get(categoriesCounter - 1);
+    manager.removeCategory(temporaryCategory);
   }
 
   @Test
-  public void shouldRemoveOneAddedOrder() {
-    Order order = new Order(PRICE_1, DESCRIPTION_1, STATUS_1, new Website(), new Client());
-    manager.addOrder(order);
+  public void shouldRemoveOneAddedCategory() {
+    Category category = new Category(NAME_1);
+    manager.addCategory(category);
 
-    int counterBeforeRemoveOneOrder = manager.getAllOrders().size();
-    Order retrievedOrder = manager.getAllOrders().get(counterBeforeRemoveOneOrder - 1);
-    manager.removeOrder(retrievedOrder);
+    int counterBeforeRemoveOneCategory = manager.getAllCategories().size();
+    Category retrievedCategory = manager.getAllCategories().get(counterBeforeRemoveOneCategory - 1);
+    manager.removeCategory(retrievedCategory);
 
-    int ordersCounter = manager.getAllOrders().size();
-    assertEquals(counterBeforeRemoveOneOrder - 1, ordersCounter);
+    int categoriesCounter = manager.getAllCategories().size();
+    assertEquals(counterBeforeRemoveOneCategory - 1, categoriesCounter);
   }
 
   @Test
-  public void shouldFindCorrectlyOrderById() {
-    Order order = new Order(PRICE_1, DESCRIPTION_1, STATUS_1, new Website(), new Client());
-    manager.addOrder(order);
+  public void shouldFindCorrectlyCategoryById() {
+    Category category = new Category(NAME_1);
+    manager.addCategory(category);
 
-    long id = order.getId();
-    Order retrievedOrder = manager.findOrderById(id);
-    assertEquals(retrievedOrder, order);
+    long id = category.getId();
+    Category retrievedCategory = manager.findCategoryById(id);
+    assertEquals(retrievedCategory, category);
 
-    manager.removeOrder(retrievedOrder);
+    manager.removeCategory(retrievedCategory);
+  }
+
+  @Test
+  public void shouldFindCorrectlyCategoryByName() {
+    Category category = new Category(NAME_1);
+    manager.addCategory(category);
+
+    String name = category.getName();
+    Category retrievedCategory = manager.findCategoryByName(name);
+    assertEquals(retrievedCategory, category);
+
+    manager.removeCategory(retrievedCategory);
   }
 
   //Clients
@@ -246,6 +267,15 @@ public class WebsitesManagerTest {
     assertThat(clientsCounter, either(is(0)).or(is(1)));
   }
 
+  @Test
+  public void shouldRemoveAllClients() {
+	Client client = new Client(FIRSTNAME_2, LASTNAME_2, EMAIL_2);
+	manager.addClient(client);
+	manager.removeAllClients();
+	int clientsCounter = manager.getAllClients().size();
+	assertThat(clientsCounter, is(0));
+  }
+  
   @Test
   public void shouldUpdateAllFieldsClient() {
     Client client = new Client(FIRSTNAME_2, LASTNAME_2, EMAIL_2);
@@ -312,39 +342,21 @@ public class WebsitesManagerTest {
     manager.removeClient(retrievedClient);
   }
 
-  // @Test
-  // public void shouldReturnCorrectlyNumberOfOrdersInClient() {
-  //   Client client = new Client();
-  //   Order order1 = new Order();
-  //   Order order2 = new Order();
-  //   Order order3 = new Order();
-  //   List<Order> orders = new ArrayList<Order>();
-  //   orders.add(order1);
-  //   orders.add(order2);
-  //   orders.add(order3);
-  //   client.setOrders(orders);
-  //   manager.addClient(client);
+  @Test
+  public void shouldReturnCorrectlyNumberOfWebsitesInCategory() {
+    Category category = new Category();
+    Website website1 = new Website();
+    Website website2 = new Website();
+    Website website3 = new Website();
+    List<Website> websites = new ArrayList<Website>();
+    websites.add(website1);
+    websites.add(website2);
+    websites.add(website3);
+    category.setWebsites(websites);
+    manager.addCategory(category);
 
-  //   Client retrievedClient = manager.getAllClients().get(manager.getAllClients().size() - 1);
-  //   assertEquals(retrievedClient.getOrders().size(), 3);
-  //   manager.removeClient(retrievedClient);
-  // }
-
-  // @Test
-  // public void shouldReturnCorrectlyNumberOfOrdersInWebsite() {
-  //   Website website = new Website();
-  //   Order order1 = new Order();
-  //   Order order2 = new Order();
-  //   Order order3 = new Order();
-  //   List<Order> orders = new ArrayList<Order>();
-  //   orders.add(order1);
-  //   orders.add(order2);
-  //   orders.add(order3);
-  //   website.setOrders(orders);
-  //   manager.addWebsite(website);
-
-  //   Website retrievedWebsite = manager.getAllWebsites().get(manager.getAllWebsites().size() - 1);
-  //   assertEquals(retrievedWebsite.getOrders().size(), 3);
-  //   manager.removeWebsite(retrievedWebsite);
-  // }
+    Category retrievedCategory = manager.getAllCategories().get(manager.getAllCategories().size() - 1);
+    assertEquals(retrievedCategory.getWebsites().size(), 3);
+    manager.removeCategory(retrievedCategory);
+  }
 }
